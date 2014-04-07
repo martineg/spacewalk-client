@@ -1,0 +1,51 @@
+---
+# tasks file for spacewalk-client
+
+- name: install Spacewalk prerequisites
+  yum: name={{ item }} state=present
+  with_items: spw_packages
+
+- name: deploy configurations
+  template: src={{ item }} dest=/etc/sysconfig/rhn/{{ item }}
+  with_items:
+    - up2date
+    - rhnsd
+  tags:
+    - config
+
+- name: check for Spacewalk server SSL certificate
+  stat: path="{{ spw_cert_file }}"
+  register: ssl_file
+
+- name: install Spacewalk server SSL certificate
+  yum: name="{{ spw_cert_rpm }}"
+  when: ssl_file.stat.exists == false
+
+- name: check for previous registration
+  command: /usr/sbin/rhn_check
+  register: spw_registered
+  ignore_errors: true
+  changed_when: False
+
+- name: register with Spacewalk
+  command: /usr/sbin/rhnreg_ks --serverUrl={{ spw_uri }} --activationkey={{ spw_activation_key }}
+  when: spw_registered|failed
+
+- name: enable rhnsd service
+  service: name=rhnsd state=started enabled=true
+
+- name: allow script runs from spacewalks server
+  copy: dest="{{ spw_permissions_dir }}/script/ok" owner=root group=root mode=0600
+        content=""
+  when: spw_allow_script is defined and spw_allow_script == true
+  tags:
+    - config
+    - allow_actions
+
+- name: allow configfiles pushed from spacewalks server
+  copy: dest="{{ spw_permissions_dir }}/configfiles/ok" owner=root group=root mode=0600 
+        content=""
+  when: spw_allow_configfiles is defined and spw_allow_configfiles == true
+  tags:
+    - config
+    - allow_actions

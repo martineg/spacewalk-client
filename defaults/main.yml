@@ -1,0 +1,17 @@
+---
+# defaults file for spacewalk-client
+spw_packages:
+    - rhn-client-tools
+    - rhn-check
+    - rhn-setup
+    - rhnsd
+    - m2crypto
+    - yum-rhn-plugin
+spw_cert_rpm: rhn-org-trusted-ssl-cert-1.0-1.noarch.rpm
+spw_cert_uri: http://{{ spw_server }}/pub/{{ spw_cert_rpm }}
+spw_cert_file: /usr/share/rhn/RHN-ORG-TRUSTED-SSL-CERT
+spw_checkin_interval: 240
+spw_uri: https://{{ spw_server }}/XMLRPC
+spw_permissions_dir: /etc/sysconfig/rhn/allowed-actions
+spw_allow_script: true
+spw_allow_configfiles: true

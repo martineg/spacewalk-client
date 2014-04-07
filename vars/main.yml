@@ -1,0 +1,5 @@
+---
+# vars file for spacewalk-client
+#
+spw_server: spacewalk-server.fqdn
+spw_activation_key: "1-rhel{{ ansible_lsb.major_release }}"
