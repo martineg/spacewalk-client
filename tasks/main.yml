@@ -18,7 +18,7 @@
   register: ssl_file
 
 - name: install Spacewalk server SSL certificate
-  yum: name="{{ spw_cert_rpm }}"
+  yum: name="{{ spw_cert_uri }}"
   when: ssl_file.stat.exists == false
 
 - name: check for previous registration
