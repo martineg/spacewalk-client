@@ -1,0 +1,15 @@
+---
+galaxy_info:
+  author: Martin Eggen
+  description: Register a system to Spacewalk
+  license: BSD
+  min_ansible_version: 1.2
+  platforms:
+  - name: EL
+    versions:
+    - 5
+    - 6
+  categories:
+  - system
+dependencies: []
+  
